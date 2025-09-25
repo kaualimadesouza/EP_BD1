@@ -82,7 +82,7 @@ public class DatabaseManager {
 
         HashMap<String, Object> row = new HashMap<>();
         row.put("nome", "Copa Brasil");
-        row.put("temporada", 1992);
+        row.put("temporada", 1991);
         row.put("tipo_campeonato", "Nacional");
         row.put("status", "Em andamento");
         row.put("campeao", null); // ainda não tem campeão
