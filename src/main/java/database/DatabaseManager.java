@@ -43,6 +43,7 @@ public class DatabaseManager {
             for (Object value : insertRow.values()) {
                 statement.setObject(index++, value);
             }
+
             return statement.executeUpdate();
         }
     }
@@ -71,42 +72,5 @@ public class DatabaseManager {
         String QUERY = String.format("DELETE FROM %s WHERE %s", tableName, whereCondition);
         Statement statement = this.connection.createStatement();
         return statement.executeUpdate(QUERY);
-    }
-
-    public static void main(String[] args) throws SQLException {
-        String url = "jdbc:postgresql://aws-1-sa-east-1.pooler.supabase.com:6543/postgres";
-        String usuario = "postgres.xevlercinmqwjvjyxpmu";
-        String senha = "RWCy1fwr7&!YZYuLu$g4";
-
-        DatabaseManager databaseManager = new DatabaseManager(url, usuario, senha);
-
-        HashMap<String, Object> row = new HashMap<>();
-        row.put("nome", "Copa Brasil");
-        row.put("temporada", 1991);
-        row.put("tipo_campeonato", "Nacional");
-        row.put("status", "Em andamento");
-        row.put("campeao", null); // ainda não tem campeão
-
-        // Insere uma linha de dados na tabela
-        databaseManager.insert("Campeonato", row);
-
-        // Busca dados na tabela
-        ResultSet result = databaseManager.retrive("SELECT * FROM Campeonato");
-        while (result.next()) {
-            System.out.println(result.getString("nome"));
-            System.out.println(result.getInt("temporada"));
-            System.out.println(result.getString("tipo_campeonato"));
-            System.out.println(result.getString("status"));
-            System.out.println(result.getString("campeao"));
-        }
-
-        // Update de dados
-        HashMap<String, Object> row2 = new HashMap<>();
-        row2.put("nome", "Copa");
-        row2.put("status", "Completo");
-        databaseManager.update("Campeonato", row2, "id = 1;");
-
-        int linhasApagadas = databaseManager.delete("Campeonato", "id = 1");
-        System.out.println(linhasApagadas);
     }
 }
