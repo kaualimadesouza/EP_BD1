@@ -18,4 +18,15 @@ public class EstadioService {
     public List<Estadio> listarEstadios() {
         return estadioRepository.listarTodos();
     }
+
+    public void excluirEstadio(Integer id) {
+        if (!estadioRepository.existePorId(id)) {
+            throw new RuntimeException("Estádio com id " + id + " não encontrado.");
+        }
+        estadioRepository.excluirEstadio(id);
+    }
+
+    public List<String> obterColunas() {
+        return estadioRepository.listarNomeColunas();
+    }
 }

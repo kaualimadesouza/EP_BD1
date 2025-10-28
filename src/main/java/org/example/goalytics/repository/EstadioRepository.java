@@ -48,4 +48,48 @@ public class EstadioRepository {
         }
         return estadios;
     }
+
+    public boolean existePorId(Integer id) {
+        String sql = "SELECT 1 FROM public.estadio WHERE id = ?;";
+        try (Connection conn = this.dataSource.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao verificar existencia do estadio com id: " + id, e);
+        }
+    }
+
+    public void excluirEstadio(Integer id) {
+        String sql = "DELETE FROM public.estadio WHERE id = ?;";
+
+        try(Connection conn = this.dataSource.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        }
+        catch (SQLException e) {
+            throw new RuntimeException("Erro ao excluir estadio com id: " + id, e);
+        }
+    }
+
+    public List<String> listarNomeColunas() {
+        String sql = "select column_name from information_schema.\"columns\" c where c.table_schema = 'public' and c.table_name = 'estadio';";
+        List<String> colunas = new ArrayList<>();
+
+        try(Connection conn = this.dataSource.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement(sql);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                colunas.add(rs.getString("column_name"));
+            }
+        }
+        catch (SQLException e) {
+            throw new RuntimeException("Erro ao listar colunas da tabela estadio", e);
+        }
+        return colunas;
+    }
 }
+
