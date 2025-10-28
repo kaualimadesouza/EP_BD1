@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/src/main/java/org/example/goalytics/model/JogadorEquipe.java">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/main/java/org/example/goalytics/model/JogadorEquipe.java" />
+              <option name="originalContent" value="package org.example.goalytics.model;&#10;&#10;import java.util.Date;&#10;&#10;public class JogadorEquipe {&#10;    private Integer idEquipe;&#10;    private Integer idJogador;&#10;    private Date dataInicioContrato;&#10;    private Date dataVencimentoCo;&#10;&#10;    public JogadorEquipe() {}&#10;&#10;    public JogadorEquipe(Integer idEquipe, Integer idJogador, Date dataInicioContrato, Date dataVencimentoCo) {&#10;        this.idEquipe = idEquipe;&#10;        this.idJogador = idJogador;&#10;        this.dataInicioContrato = dataInicioContrato;&#10;        this.dataVencimentoCo = dataVencimentoCo;&#10;    }&#10;&#10;    public Integer getIdEquipe() { return idEquipe; }&#10;    public void setIdEquipe(Integer idEquipe) { this.idEquipe = idEquipe; }&#10;&#10;    public Integer getIdJogador() { return idJogador; }&#10;    public void setIdJogador(Integer idJogador) { this.idJogador = idJogador; }&#10;&#10;    public Date getDataInicioContrato() { return dataInicioContrato; }&#10;    public void setDataInicioContrato(Date dataInicioContrato) { this.dataInicioContrato = dataInicioContrato; }&#10;&#10;    public Date getDataVencimentoCo() { return dataVencimentoCo; }&#10;    public void setDataVencimentoCo(Date dataVencimentoCo) { this.dataVencimentoCo = dataVencimentoCo; }&#10;}&#10;" />
+              <option name="updatedContent" value="package org.example.goalytics.model;&#10;&#10;import java.util.Date;&#10;&#10;public class JogadorEquipe {&#10;    private Integer id;&#10;    private Integer idEquipe;&#10;    private Integer idJogador;&#10;    private Date dataInicioContrato;&#10;    private Date dataVencimentoCo;&#10;&#10;    public JogadorEquipe() {}&#10;&#10;    public JogadorEquipe(Integer id, Integer idEquipe, Integer idJogador, Date dataInicioContrato, Date dataVencimentoCo) {&#10;        this.id = id;&#10;        this.idEquipe = idEquipe;&#10;        this.idJogador = idJogador;&#10;        this.dataInicioContrato = dataInicioContrato;&#10;        this.dataVencimentoCo = dataVencimentoCo;&#10;    }&#10;&#10;    public Integer getId() { return id; }&#10;    public void setId(Integer id) { this.id = id; }&#10;&#10;    public Integer getIdEquipe() { return idEquipe; }&#10;    public void setIdEquipe(Integer idEquipe) { this.idEquipe = idEquipe; }&#10;&#10;    public Integer getIdJogador() { return idJogador; }&#10;    public void setIdJogador(Integer idJogador) { this.idJogador = idJogador; }&#10;&#10;    public Date getDataInicioContrato() { return dataInicioContrato; }&#10;    public void setDataInicioContrato(Date dataInicioContrato) { this.dataInicioContrato = dataInicioContrato; }&#10;&#10;    public Date getDataVencimentoCo() { return dataVencimentoCo; }&#10;    public void setDataVencimentoCo(Date dataVencimentoCo) { this.dataVencimentoCo = dataVencimentoCo; }&#10;}" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

@@ -6,28 +6,28 @@ import java.util.Date;
 //FROM public.estadio;
 public class Estadio {
     private Integer id;
-    private String nome_oficial;
-    private String nome_apelido;
-    private Integer capacidade_atual;
-    private Integer capacidade_maxima;
+    private String nomeOficial;
+    private String nomeApelido;
+    private Integer capacidadeAtual;
+    private Integer capacidadeMaxima;
     private String pais;
     private String endereco;
-    private Date data_inauguracao;
-    private String tipo_gramado;
+    private Date dataInauguracao;
+    private String tipoGramado;
 
     // Construtor padrão necessário para serialização JSON
     public Estadio() {}
 
-    public Estadio(Integer id, String nome_oficial, String nome_apelido, Integer capacidade_atual, Integer capacidade_maxima, String pais, String endereco, Date data_inauguracao, String tipo_gramado) {
+    public Estadio(Integer id, String nomeOficial, String nomeApelido, Integer capacidadeAtual, Integer capacidadeMaxima, String pais, String endereco, Date dataInauguracao, String tipoGramado) {
         this.id = id;
-        this.nome_oficial = nome_oficial;
-        this.nome_apelido = nome_apelido;
-        this.capacidade_atual = capacidade_atual;
-        this.capacidade_maxima = capacidade_maxima;
+        this.nomeOficial = nomeOficial;
+        this.nomeApelido = nomeApelido;
+        this.capacidadeAtual = capacidadeAtual;
+        this.capacidadeMaxima = capacidadeMaxima;
         this.pais = pais;
         this.endereco = endereco;
-        this.data_inauguracao = data_inauguracao;
-        this.tipo_gramado = tipo_gramado;
+        this.dataInauguracao = dataInauguracao;
+        this.tipoGramado = tipoGramado;
     }
 
     public Integer getId() {
@@ -38,36 +38,36 @@ public class Estadio {
         this.id = id;
     }
 
-    public String getNome_oficial() {
-        return nome_oficial;
+    public String getNomeOficial() {
+        return nomeOficial;
     }
 
-    public void setNome_oficial(String nome_oficial) {
-        this.nome_oficial = nome_oficial;
+    public void setNomeOficial(String nomeOficial) {
+        this.nomeOficial = nomeOficial;
     }
 
-    public String getNome_apelido() {
-        return nome_apelido;
+    public String getNomeApelido() {
+        return nomeApelido;
     }
 
-    public void setNome_apelido(String nome_apelido) {
-        this.nome_apelido = nome_apelido;
+    public void setNomeApelido(String nomeApelido) {
+        this.nomeApelido = nomeApelido;
     }
 
-    public Integer getCapacidade_atual() {
-        return capacidade_atual;
+    public Integer getCapacidadeAtual() {
+        return capacidadeAtual;
     }
 
-    public void setCapacidade_atual(Integer capacidade_atual) {
-        this.capacidade_atual = capacidade_atual;
+    public void setCapacidadeAtual(Integer capacidadeAtual) {
+        this.capacidadeAtual = capacidadeAtual;
     }
 
-    public Integer getCapacidade_maxima() {
-        return capacidade_maxima;
+    public Integer getCapacidadeMaxima() {
+        return capacidadeMaxima;
     }
 
-    public void setCapacidade_maxima(Integer capacidade_maxima) {
-        this.capacidade_maxima = capacidade_maxima;
+    public void setCapacidadeMaxima(Integer capacidadeMaxima) {
+        this.capacidadeMaxima = capacidadeMaxima;
     }
 
     public String getPais() {
@@ -86,19 +86,19 @@ public class Estadio {
         this.endereco = endereco;
     }
 
-    public Date getData_inauguracao() {
-        return data_inauguracao;
+    public Date getDataInauguracao() {
+        return dataInauguracao;
     }
 
-    public void setData_inauguracao(Date data_inauguracao) {
-        this.data_inauguracao = data_inauguracao;
+    public void setDataInauguracao(Date dataInauguracao) {
+        this.dataInauguracao = dataInauguracao;
     }
 
-    public String getTipo_gramado() {
-        return tipo_gramado;
+    public String getTipoGramado() {
+        return tipoGramado;
     }
 
-    public void setTipo_gramado(String tipo_gramado) {
-        this.tipo_gramado = tipo_gramado;
+    public void setTipoGramado(String tipoGramado) {
+        this.tipoGramado = tipoGramado;
     }
 }

@@ -29,4 +29,20 @@ public class EstadioService {
     public List<String> obterColunas() {
         return estadioRepository.listarNomeColunas();
     }
+
+    public void inserirEstadio(Estadio estadio) {
+        estadioRepository.inserir(estadio);
+    }
+
+    public void atualizarEstadio(Estadio estadio, Integer id) {
+        if (estadioRepository.existePorId(id)) {
+            estadioRepository.atualizar(estadio, id);
+        } else {
+            throw new RuntimeException("Estádio com id " + id + " não encontrado.");
+        }
+    }
+
+    public Estadio obterEstadioPorId(Integer id) {
+        return estadioRepository.obterPorId(id);
+    }
 }
