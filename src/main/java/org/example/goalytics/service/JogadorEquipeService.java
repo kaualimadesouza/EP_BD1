@@ -26,8 +26,16 @@ public class JogadorEquipeService {
         jogadorEquipeRepository.atualizar(jogadorEquipe);
     }
 
+    public void atualizar(JogadorEquipe jogadorEquipe, Integer id) {
+        jogadorEquipeRepository.atualizar(jogadorEquipe, id);
+    }
+
     public void excluir(Integer idEquipe, Integer idJogador) {
         jogadorEquipeRepository.excluir(idEquipe, idJogador);
+    }
+
+    public void excluir(Integer id) {
+        jogadorEquipeRepository.excluir(id);
     }
 
     public JogadorEquipe obterPorId(Integer idEquipe, Integer idJogador) {

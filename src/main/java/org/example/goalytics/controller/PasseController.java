@@ -1,7 +1,7 @@
 package org.example.goalytics.controller;
 
-import org.example.goalytics.model.Estadio;
-import org.example.goalytics.service.EstadioService;
+import org.example.goalytics.model.Passe;
+import org.example.goalytics.service.PasseService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,28 +9,28 @@ import java.util.Collections;
 import java.util.List;
 
 @RestController
-@RequestMapping("/estadio")
+@RequestMapping("/passe")
 @CrossOrigin(origins = "*")
-public class EstadioController {
+public class PasseController {
 
-    private final EstadioService estadioService;
+    private final PasseService passeService;
 
-    public EstadioController(EstadioService estadioService) {
-        this.estadioService = estadioService;
+    public PasseController(PasseService passeService) {
+        this.passeService = passeService;
     }
 
     @CrossOrigin(origins = "*")
     @GetMapping
-    public List<Estadio> listarEstadios() {
-        return estadioService.listarEstadios();
+    public List<Passe> listarPasses() {
+        return passeService.listarPasses();
     }
 
     @CrossOrigin(origins = "*")
-    @GetMapping("/{id}")
-    public ResponseEntity<Estadio> obterEstadioPorId(@PathVariable Integer id) {
+    @GetMapping("/{numEvento}")
+    public ResponseEntity<Passe> obterPassePorNumEvento(@PathVariable Integer numEvento) {
         try {
-            Estadio estadio = estadioService.obterEstadioPorId(id);
-            return ResponseEntity.ok(estadio);
+            Passe passe = passeService.obterPassePorNumEvento(numEvento);
+            return ResponseEntity.ok(passe);
         }
         catch (RuntimeException e) {
             return ResponseEntity.status(500).build();
@@ -38,16 +38,16 @@ public class EstadioController {
     }
 
     @CrossOrigin(origins = "*")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletarEstadio(@PathVariable Integer id) {
+    @DeleteMapping("/{numEvento}")
+    public ResponseEntity<String> deletarPasse(@PathVariable Integer numEvento) {
         try {
-            estadioService.excluirEstadio(id);
+            passeService.excluirPasse(numEvento);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             if (e.getMessage() != null && e.getMessage().contains("não encontrado")) {
                 return ResponseEntity.status(404).body(e.getMessage());
             }
-            return ResponseEntity.status(500).body("Erro ao excluir estádio: " + e.getMessage());
+            return ResponseEntity.status(500).body("Erro ao excluir passe: " + e.getMessage());
         }
     }
 
@@ -55,7 +55,7 @@ public class EstadioController {
     @GetMapping("/columns")
     public ResponseEntity<List<String>> obterColunas() {
         try {
-            List<String> colunas = estadioService.obterColunas();
+            List<String> colunas = passeService.obterColunas();
             return ResponseEntity.ok(colunas);
         } catch (RuntimeException e) {
             return ResponseEntity.status(500).body(Collections.singletonList("Erro ao adicionar coluna: " + e.getMessage()));
@@ -64,26 +64,25 @@ public class EstadioController {
 
     @CrossOrigin(origins = "*")
     @PostMapping()
-    public ResponseEntity<String> inserirEstadio(@RequestBody Estadio estadio) {
+    public ResponseEntity<String> inserirPasse(@RequestBody Passe passe) {
         try {
-            estadioService.inserirEstadio(estadio);
+            passeService.inserirPasse(passe);
             return ResponseEntity.ok().build();
         }
         catch (RuntimeException e) {
-            return ResponseEntity.status(500).body("Erro ao inserir estádio: " + e.getMessage());
+            return ResponseEntity.status(500).body("Erro ao inserir passe: " + e.getMessage());
         }
     }
 
     @CrossOrigin(origins = "*")
-    @PutMapping("/{id}")
-    public ResponseEntity<String> atualizarEstadio(@RequestBody Estadio estadio, @PathVariable Integer id) {
+    @PutMapping("/{numEvento}")
+    public ResponseEntity<String> atualizarPasse(@RequestBody Passe passe, @PathVariable Integer numEvento) {
         try {
-            estadioService.atualizarEstadio(estadio, id);
+            passeService.atualizarPasse(passe, numEvento);
             return ResponseEntity.ok().build();
         }
         catch (RuntimeException e) {
-            return ResponseEntity.status(500).body("Erro ao atualizar estádio: " + e.getMessage());
+            return ResponseEntity.status(500).body("Erro ao atualizar passe: " + e.getMessage());
         }
     }
-
 }

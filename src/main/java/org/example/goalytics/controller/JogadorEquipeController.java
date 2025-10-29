@@ -46,10 +46,10 @@ public class JogadorEquipeController {
     }
 
     @CrossOrigin(origins = "*")
-    @DeleteMapping("/{idEquipe}/{idJogador}")
-    public ResponseEntity<String> excluir(@PathVariable Integer idEquipe, @PathVariable Integer idJogador) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> excluir(@PathVariable Integer id) {
         try {
-            jogadorEquipeService.excluir(idEquipe, idJogador);
+            jogadorEquipeService.excluir(id);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.status(500).body("Erro ao excluir jogador_equipe: " + e.getMessage());
@@ -83,6 +83,17 @@ public class JogadorEquipeController {
     public ResponseEntity<String> atualizar(@RequestBody JogadorEquipe jogadorEquipe) {
         try {
             jogadorEquipeService.atualizar(jogadorEquipe);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(500).body("Erro ao atualizar jogador_equipe: " + e.getMessage());
+        }
+    }
+
+    @CrossOrigin(origins = "*")
+    @PutMapping("/{id}")
+    public ResponseEntity<String> atualizarJogadorEquipe(@RequestBody JogadorEquipe jogadorEquipe, @PathVariable Integer id) {
+        try {
+            jogadorEquipeService.atualizar(jogadorEquipe, id);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.status(500).body("Erro ao atualizar jogador_equipe: " + e.getMessage());

@@ -66,12 +66,38 @@ public class JogadorEquipeRepository {
         }
     }
 
+    public void atualizar(JogadorEquipe jogadorEquipe, Integer id) {
+        String sql = "UPDATE public.jogador_equipe SET id_equipe = ?, id_jogador = ?, data_inicio_contrato = ?, data_vencimento_co = ? WHERE id = ?;";
+        try (Connection conn = this.dataSource.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, jogadorEquipe.getIdEquipe());
+            statement.setInt(2, jogadorEquipe.getIdJogador());
+            statement.setDate(3, jogadorEquipe.getDataInicioContrato() != null ? new java.sql.Date(jogadorEquipe.getDataInicioContrato().getTime()) : null);
+            statement.setDate(4, jogadorEquipe.getDataVencimentoCo() != null ? new java.sql.Date(jogadorEquipe.getDataVencimentoCo().getTime()) : null);
+            statement.setInt(5, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao atualizar jogador_equipe", e);
+        }
+    }
+
     public void excluir(Integer idEquipe, Integer idJogador) {
         String sql = "DELETE FROM public.jogador_equipe WHERE id_equipe = ? AND id_jogador = ?;";
         try (Connection conn = this.dataSource.getConnection()) {
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, idEquipe);
             statement.setInt(2, idJogador);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao excluir jogador_equipe", e);
+        }
+    }
+
+    public void excluir(Integer id) {
+        String sql = "DELETE FROM public.jogador_equipe WHERE id = ?;";
+        try (Connection conn = this.dataSource.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao excluir jogador_equipe", e);
