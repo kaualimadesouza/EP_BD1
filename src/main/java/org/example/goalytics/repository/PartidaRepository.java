@@ -1,5 +1,6 @@
 package org.example.goalytics.repository;
 
+import org.example.goalytics.Records.PartidaDetalhesDTO;
 import org.example.goalytics.model.Partida;
 import org.springframework.stereotype.Repository;
 
@@ -134,5 +135,47 @@ public class PartidaRepository {
         }
         return colunas;
     }
-}
 
+    public List<PartidaDetalhesDTO> obterUltimaPartidaDetalhes() {
+        String sql = "select \n" +
+                "\tp.id,\n" +
+                "    p.data,\n" +
+                "    p.horario,\n" +
+                "    p.condicao_climatica,\n" +
+                "    p.status,\n" +
+                "    c.temporada as \"temporada_campeonato\",\n" +
+                "    c.campeao,\n" +
+                "    c.nome as \"nome_campeonato\",\n" +
+                "    e.nome_oficial as \"nome_oficial_estadio\",\n" +
+                "    e.nome_apelido as \"nome_apelido_estadio\",\n" +
+                "    e.pais\n" +
+                "from public.partida p\n" +
+                "inner join public.campeonato c on p.id_campeonato = c.id\n" +
+                "inner join public.estadio e on p.id_estadio = e.id\n" +
+                "limit 10;\n";
+        List<PartidaDetalhesDTO> partidasDetalhasdas = new ArrayList<>();
+        try (Connection conn = this.dataSource.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement(sql);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                PartidaDetalhesDTO partidaDetalhes = new PartidaDetalhesDTO(
+                        rs.getLong("id"),
+                        rs.getDate("data"),
+                        rs.getTime("horario"),
+                        rs.getString("condicao_climatica"),
+                        rs.getString("status"),
+                        rs.getInt("temporada_campeonato"),
+                        rs.getString("campeao"),
+                        rs.getString("nome_campeonato"),
+                        rs.getString("nome_oficial_estadio"),
+                        rs.getString("nome_apelido_estadio"),
+                        rs.getString("pais")
+                );
+                partidasDetalhasdas.add(partidaDetalhes);
+            }
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+        return partidasDetalhasdas;
+    }
+}

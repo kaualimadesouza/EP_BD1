@@ -1,13 +1,17 @@
 package org.example.goalytics.service;
 
+import org.example.goalytics.Records.EquipePartidaDTO;
 import org.example.goalytics.model.Equipe;
 import org.example.goalytics.repository.EquipeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class EquipeService {
+    private static final Logger logger = LoggerFactory.getLogger(EquipeService.class);
     private final EquipeRepository equipeRepository;
 
     public EquipeService(EquipeRepository equipeRepository) {
@@ -44,5 +48,9 @@ public class EquipeService {
     public List<String> obterColunas() {
         return equipeRepository.listarNomeColunas();
     }
-}
 
+    public List<EquipePartidaDTO> obterEquipesPorPartidaId(Integer id) {
+        logger.info("Buscando equipes por partida id {}", id);
+        return equipeRepository.obterEquipesPorPartidaId(id);
+    }
+}

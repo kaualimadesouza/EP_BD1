@@ -1,5 +1,6 @@
 package org.example.goalytics.service;
 
+import org.example.goalytics.Records.PartidaDetalhesDTO;
 import org.example.goalytics.model.Partida;
 import org.example.goalytics.repository.PartidaRepository;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,11 @@ public class PartidaService {
 
     public List<String> obterColunas() {
         return partidaRepository.listarNomeColunas();
+    }
+
+
+    public List<PartidaDetalhesDTO> obterUltimaPartidaDetalhes() {
+        return partidaRepository.obterUltimaPartidaDetalhes();
     }
 }
 

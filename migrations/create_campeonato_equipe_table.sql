@@ -6,3 +6,4 @@ CREATE TABLE campeonato_equipe (
     CONSTRAINT fk_campeonato FOREIGN KEY (id_campeonato) REFERENCES campeonato(id),
     CONSTRAINT fk_equipe FOREIGN KEY (id_equipe) REFERENCES equipe(id)
 );
+

@@ -1,5 +1,6 @@
 package org.example.goalytics.repository;
 
+import org.example.goalytics.Records.EquipePartidaDTO;
 import org.example.goalytics.model.Equipe;
 import org.springframework.stereotype.Repository;
 
@@ -7,9 +8,12 @@ import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Repository
 public class EquipeRepository {
+    private static final Logger logger = LoggerFactory.getLogger(EquipeRepository.class);
     private final DataSource dataSource;
 
     public EquipeRepository(DataSource dataSource) {
@@ -138,5 +142,40 @@ public class EquipeRepository {
         }
         return colunas;
     }
-}
 
+    public List<EquipePartidaDTO> obterEquipesPorPartidaId(Integer id) {
+        logger.info("Consultando equipes da partida com id {}", id);
+        String sql = "select \n" +
+                "\te.id,\n" +
+                "\te.cidade,\n" +
+                "\te.nome_popular,\n" +
+                "\te.nome_oficial,\n" +
+                "\te.sigla,\n" +
+                "\tpep.placar\n" +
+                "from equipe e\n" +
+                "inner join public.partida_equipe_possui pep on e.id = pep.id_equipe\n" +
+                "inner join public.partida p on p.id = pep.id_partida \n" +
+                "where pep.id_partida = ?;";
+        List<EquipePartidaDTO> equipes = new ArrayList<>();
+        try (Connection conn = this.dataSource.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                EquipePartidaDTO equipe = new EquipePartidaDTO(
+                        rs.getLong("id"),
+                        rs.getString("cidade"),
+                        rs.getString("nome_popular"),
+                        rs.getString("nome_oficial"),
+                        rs.getString("sigla"),
+                        rs.getInt("placar")
+                );
+                equipes.add(equipe);
+            }
+        } catch (SQLException e) {
+            logger.error("Erro ao listar equipes da partida com id {}: {}", id, e.getMessage());
+            throw new RuntimeException("Erro ao listar equipes da partida com id: " + id, e);
+        }
+        return equipes;
+    }
+}
