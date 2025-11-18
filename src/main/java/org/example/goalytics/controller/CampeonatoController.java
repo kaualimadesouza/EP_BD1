@@ -1,6 +1,6 @@
 package org.example.goalytics.controller;
 
-import org.example.goalytics.Records.CampeonatoJogosDTO;
+import org.example.goalytics.Records.CampeonatoHistoricoPartidasDTO;
 import org.example.goalytics.model.Campeonato;
 import org.example.goalytics.service.CampeonatoService;
 import org.springframework.http.ResponseEntity;
@@ -36,10 +36,10 @@ public class CampeonatoController {
     }
 
     @CrossOrigin(origins = "*")
-    @GetMapping("/jogos_recentes_por_campeonato")
-    public ResponseEntity<List<CampeonatoJogosDTO>> listarCampeonatosComJogosRecentes() {
+    @GetMapping("/jogos_recentes")
+    public ResponseEntity<List<CampeonatoHistoricoPartidasDTO>> listarCampeonatosComJogosRecentes() {
         try {
-            List<CampeonatoJogosDTO> campeonatos = campeonatoService.listarCampeonatosComJogosRecentes();
+            List<CampeonatoHistoricoPartidasDTO> campeonatos = campeonatoService.listarCampeonatosComJogosRecentes();
             return ResponseEntity.ok(campeonatos);
         } catch (RuntimeException e) {
             return ResponseEntity.status(500).build();

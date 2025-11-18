@@ -1,5 +1,6 @@
 package org.example.goalytics.repository;
 
+import org.example.goalytics.Records.EquipeHistoricoPartidasDTO;
 import org.example.goalytics.Records.PartidaDetalhesDTO;
 import org.example.goalytics.model.Partida;
 import org.springframework.stereotype.Repository;
@@ -28,8 +29,8 @@ public class PartidaRepository {
                         rs.getInt("id"),
                         rs.getInt("id_estadio"),
                         rs.getInt("id_campeonato"),
-                        rs.getDate("data"),
-                        rs.getTime("horario"),
+                        rs.getDate("data").toLocalDate(),
+                        rs.getTime("horario").toLocalTime(),
                         rs.getString("condicao_climatica"),
                         rs.getString("status")
                 );
@@ -70,9 +71,7 @@ public class PartidaRepository {
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, partida.getIdEstadio());
             statement.setInt(2, partida.getIdCampeonato());
-            statement.setDate(3, partida.getData() != null ? new java.sql.Date(partida.getData().getTime()) : null);
-            statement.setTime(4, partida.getHorario());
-            statement.setString(5, partida.getCondicaoClimatica());
+            statement.setTime(4, partida.getHorario() != null ? java.sql.Time.valueOf(partida.getHorario()) : null);
             statement.setString(6, partida.getStatus());
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -86,8 +85,7 @@ public class PartidaRepository {
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, partida.getIdEstadio());
             statement.setInt(2, partida.getIdCampeonato());
-            statement.setDate(3, partida.getData() != null ? new java.sql.Date(partida.getData().getTime()) : null);
-            statement.setTime(4, partida.getHorario());
+            statement.setDate(3, partida.getData() != null ? java.sql.Date.valueOf(partida.getData()) : null);
             statement.setString(5, partida.getCondicaoClimatica());
             statement.setString(6, partida.getStatus());
             statement.setInt(7, id);
@@ -108,8 +106,8 @@ public class PartidaRepository {
                         rs.getInt("id"),
                         rs.getInt("id_estadio"),
                         rs.getInt("id_campeonato"),
-                        rs.getDate("data"),
-                        rs.getTime("horario"),
+                        rs.getDate("data").toLocalDate(),
+                        rs.getTime("horario").toLocalTime(),
                         rs.getString("condicao_climatica"),
                         rs.getString("status")
                 );
@@ -177,5 +175,60 @@ public class PartidaRepository {
             throw new RuntimeException(ex);
         }
         return partidasDetalhasdas;
+    }
+
+    public List<Partida> listarJogosPorCampeonato(Integer id) {
+        String sql = "SELECT * FROM public.partida WHERE id_campeonato = ? ORDER BY data DESC, horario DESC LIMIT 5;";
+        List<Partida> partidas = new ArrayList<>();
+        try (Connection conn = this.dataSource.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                Partida partida = new Partida(
+                        rs.getInt("id"),
+                        rs.getInt("id_estadio"),
+                        rs.getInt("id_campeonato"),
+                        rs.getDate("data").toLocalDate(),
+                        rs.getTime("horario").toLocalTime(),
+                        rs.getString("condicao_climatica"),
+                        rs.getString("status")
+                );
+                partidas.add(partida);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao listar partidas do campeonato com id: " + id, e);
+        }
+        return partidas;
+    }
+
+    public List<EquipeHistoricoPartidasDTO> obterEquipesPorPartidaHistoricoPartidas(Integer id) {
+        String sql = "SELECT\n" +
+                "    e.id AS id_time,\n" +
+                "    e.nome_popular  AS nome,\n" +
+                "    e.url_logo_equipe  AS icon,\n" +
+                "    pe.placar \n" +
+                "FROM public.partida_equipe_possui pe\n" +
+                "INNER JOIN public.equipe e ON pe.id_equipe = e.id\n" +
+                "WHERE pe.id_partida = ?;";
+
+        List<EquipeHistoricoPartidasDTO> equipes = new ArrayList<>();
+        try (Connection conn = this.dataSource.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                EquipeHistoricoPartidasDTO equipe = new EquipeHistoricoPartidasDTO(
+                        (int) rs.getLong("id_time"),
+                        rs.getString("nome"),
+                        rs.getString("icon"),
+                        rs.getInt("placar")
+                );
+                equipes.add(equipe);
+            }
+            return equipes;
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao obter equipes da partida com id: " + id, e);
+        }
     }
 }

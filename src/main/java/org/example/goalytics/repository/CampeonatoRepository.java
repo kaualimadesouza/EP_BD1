@@ -30,7 +30,8 @@ public class CampeonatoRepository {
                         rs.getString("status"),
                         rs.getString("campeao"),
                         rs.getString("nome"),
-                        rs.getString("url_campeonato")
+                        rs.getString("url_campeonato"),
+                        rs.getString("regiao")
                 );
                 campeonatos.add(campeonato);
             }
@@ -116,7 +117,8 @@ public class CampeonatoRepository {
                         rs.getString("status"),
                         rs.getString("campeao"),
                         rs.getString("nome"),
-                        rs.getString("url_campeonato")
+                        rs.getString("url_campeonato"),
+                        rs.getString("regiao")
                 );
             } else {
                 throw new RuntimeException("Campeonato com id " + id + " não encontrado.");
