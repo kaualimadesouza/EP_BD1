@@ -7,16 +7,18 @@ public class Campeonato {
     private String status;
     private String campeao;
     private String nome;
+    private String urlCampeonato;
 
     public Campeonato() {}
 
-    public Campeonato(Integer id, Integer temporada, String tipoCampeonato, String status, String campeao, String nome) {
+    public Campeonato(Integer id, Integer temporada, String tipoCampeonato, String status, String campeao, String nome, String urlCampeonato) {
         this.id = id;
         this.temporada = temporada;
         this.tipoCampeonato = tipoCampeonato;
         this.status = status;
         this.campeao = campeao;
         this.nome = nome;
+        this.urlCampeonato = urlCampeonato;
     }
 
     public Integer getId() { return id; }
@@ -36,5 +38,13 @@ public class Campeonato {
 
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }
+
+    public String getUrlCampeonato() {
+        return urlCampeonato;
+    }
+
+    public void setUrlCampeonato(String urlCampeonato) {
+        this.urlCampeonato = urlCampeonato;
+    }
 }
 

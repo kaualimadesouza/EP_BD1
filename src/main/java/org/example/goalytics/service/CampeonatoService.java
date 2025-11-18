@@ -1,5 +1,6 @@
 package org.example.goalytics.service;
 
+import org.example.goalytics.Records.CampeonatoJogosDTO;
 import org.example.goalytics.model.Campeonato;
 import org.example.goalytics.repository.CampeonatoRepository;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,21 @@ public class CampeonatoService {
 
     public List<String> obterColunas() {
         return campeonatoRepository.listarNomeColunas();
+    }
+
+    public List<CampeonatoJogosDTO> listarCampeonatosComJogosRecentes() {
+        
+
+        // 1. Buscar todos os campeonatos
+        List<Campeonato> campeonatos = campeonatoRepository.listarTodos();
+
+        // 2. Para cada campeonato, buscar os jogos recentes e montar o DTO
+        for (Campeonato campeonato : campeonatos) {
+            List<CampeonatoJogosDTO> jogosRecentes = campeonatoRepository.listarJogosRecentesPorCampeonato(campeonato.getId());
+            for (CampeonatoJogosDTO dto : jogosRecentes) {
+                return jogosRecentes;
+            }
+        }
     }
 }
 

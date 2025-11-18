@@ -1,5 +1,6 @@
 package org.example.goalytics.controller;
 
+import org.example.goalytics.Records.PartidaDetalhesDTO;
 import org.example.goalytics.model.Partida;
 import org.example.goalytics.service.PartidaService;
 import org.springframework.http.ResponseEntity;
@@ -78,6 +79,17 @@ public class PartidaController {
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.status(500).body("Erro ao atualizar partida: " + e.getMessage());
+        }
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("detalhes/ultimas")
+    public ResponseEntity<List<PartidaDetalhesDTO>> obterUltimaPartidaDetalhes() {
+        try {
+            List<PartidaDetalhesDTO> partidas = partidaService.obterUltimaPartidaDetalhes();
+            return ResponseEntity.ok(partidas);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(500).build();
         }
     }
 }
