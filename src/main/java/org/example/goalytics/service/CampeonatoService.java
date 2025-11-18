@@ -69,7 +69,7 @@ public class CampeonatoService {
             CampeonatoHistoricoPartidasDTO campeonatoHistoricoPartidasDTO = new CampeonatoHistoricoPartidasDTO(
                 campeonato.getId(),
                 campeonato.getRegiao(),
-                "icon_url_a_definir",
+                campeonato.getUrlCampeonato(),
                 campeonato.getNome(),
                 new ArrayList<>()
             );

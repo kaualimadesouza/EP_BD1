@@ -6,6 +6,7 @@ public record EquipePartidaDTO (
          String nomePopular,
          String nomeOficial,
          String sigla,
-         Integer placar
+         Integer placar,
+         String urlEscudoEquipe
 ) {
 }

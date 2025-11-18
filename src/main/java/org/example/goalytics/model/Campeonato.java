@@ -21,6 +21,14 @@ public class Campeonato {
         this.regiao = regiao;
     }
 
+    public String getUrlCampeonato() {
+        return urlCampeonato;
+    }
+
+    public void setUrlCampeonato(String urlCampeonato) {
+        this.urlCampeonato = urlCampeonato;
+    }
+
     public String getRegiao() {
         return regiao;
     }

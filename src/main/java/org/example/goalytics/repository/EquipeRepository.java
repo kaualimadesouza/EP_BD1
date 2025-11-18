@@ -145,17 +145,24 @@ public class EquipeRepository {
 
     public List<EquipePartidaDTO> obterEquipesPorPartidaId(Integer id) {
         logger.info("Consultando equipes da partida com id {}", id);
-        String sql = "select \n" +
-                "\te.id,\n" +
-                "\te.cidade,\n" +
-                "\te.nome_popular,\n" +
-                "\te.nome_oficial,\n" +
-                "\te.sigla,\n" +
-                "\tpep.placar\n" +
-                "from equipe e\n" +
-                "inner join public.partida_equipe_possui pep on e.id = pep.id_equipe\n" +
-                "inner join public.partida p on p.id = pep.id_partida \n" +
-                "where pep.id_partida = ?;";
+        String sql = "SELECT \n" +
+                "    e.id,\n" +
+                "    e.cidade,\n" +
+                "    e.nome_popular,\n" +
+                "    e.nome_oficial,\n" +
+                "    e.sigla,\n" +
+                "    pep.placar,\n" +
+                "    e.url_logo_equipe \n" +
+                "FROM \n" +
+                "    equipe e\n" +
+                "INNER JOIN \n" +
+                "    public.partida_equipe_possui pep \n" +
+                "    ON e.id = pep.id_equipe\n" +
+                "INNER JOIN \n" +
+                "    public.partida p \n" +
+                "    ON p.id = pep.id_partida\n" +
+                "WHERE \n" +
+                "    pep.id_partida = ?;\n";
         List<EquipePartidaDTO> equipes = new ArrayList<>();
         try (Connection conn = this.dataSource.getConnection()) {
             PreparedStatement statement = conn.prepareStatement(sql);
@@ -168,7 +175,8 @@ public class EquipeRepository {
                         rs.getString("nome_popular"),
                         rs.getString("nome_oficial"),
                         rs.getString("sigla"),
-                        rs.getInt("placar")
+                        rs.getInt("placar"),
+                        rs.getString("url_logo_equipe")
                 );
                 equipes.add(equipe);
             }
