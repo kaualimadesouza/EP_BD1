@@ -1,6 +1,8 @@
 package org.example.goalytics.controller;
 
+import org.example.goalytics.Records.ArtilheirosCampeonatoDTO;
 import org.example.goalytics.Records.CampeonatoHistoricoPartidasDTO;
+import org.example.goalytics.Records.EstatisticasCampeonatoDTO;
 import org.example.goalytics.model.Campeonato;
 import org.example.goalytics.service.CampeonatoService;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +43,28 @@ public class CampeonatoController {
         try {
             List<CampeonatoHistoricoPartidasDTO> campeonatos = campeonatoService.listarCampeonatosComJogosRecentes();
             return ResponseEntity.ok(campeonatos);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/artilheiros")
+    public ResponseEntity<List<ArtilheirosCampeonatoDTO>> artilheirosPorCampeonato() {
+        try {
+            List<ArtilheirosCampeonatoDTO> artilheiros = campeonatoService.listarArtilheiroPorCampeonato();
+            return ResponseEntity.ok(artilheiros);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/estatisticas/{nomeCampeonato}")
+    public ResponseEntity<EstatisticasCampeonatoDTO> estatisticasPorNomeCampeonato(@PathVariable String nomeCampeonato) {
+        try {
+            EstatisticasCampeonatoDTO estatisticas = campeonatoService.buscarEstatisticasPorNomeCampeonato();
+            return ResponseEntity.ok(estatisticas);
         } catch (RuntimeException e) {
             return ResponseEntity.status(500).build();
         }

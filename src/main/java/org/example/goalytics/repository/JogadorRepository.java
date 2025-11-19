@@ -1,5 +1,6 @@
 package org.example.goalytics.repository;
 
+import org.example.goalytics.Records.ArtilheiroDTO;
 import org.example.goalytics.model.Jogador;
 import org.springframework.stereotype.Repository;
 
@@ -154,5 +155,74 @@ public class JogadorRepository {
             throw new RuntimeException("Erro ao listar colunas da tabela jogador", e);
         }
         return colunas;
+    }
+
+    public List<ArtilheiroDTO> obterArtilheirosPorCampeonato(Integer id) {
+        String query = "SELECT\n" +
+                "    j.id,\n" +
+                "    j.nome_completo AS nome_jogador,\n" +
+                "    j.posicao,\n" +
+                "    (\n" +
+                "        SELECT COUNT(f.id_partida)\n" +
+                "        FROM finalizacao f\n" +
+                "        JOIN partida p ON f.id_partida = p.id \n" +
+                "        WHERE f.id_jogador = j.id\n" +
+                "          AND f.sucesso = TRUE \n" +
+                "          AND p.id_campeonato = ?\n" +
+                "    ) AS num_gols,\n" +
+                "    (\n" +
+                "    \tselect \n" +
+                "\t\t\tcount(p.id)\n" +
+                "\t\tfrom partida p\n" +
+                "\t\tinner join partida_equipe_possui pep on p.id = pep.id_partida\n" +
+                "\t\tinner join equipe e on pep.id_equipe = e.id\n" +
+                "\t\tinner join jogador_equipe je on e.id = je.id_equipe \n" +
+                "\t\tinner join jogador j2 on j2.id = je.id_jogador\n" +
+                "\t\twhere j2.id = j.id\n" +
+                "    ) as num_partidas,\n" +
+                "    j.url_foto_jogador\n" +
+                "FROM jogador j\n" +
+                "JOIN jogador_equipe je ON j.id = je.id_jogador\n" +
+                "CROSS JOIN campeonato c\n" +
+                "WHERE c.id = ?\n" +
+                "  AND (\n" +
+                "        SELECT COUNT(f.id_partida)\n" +
+                "        FROM finalizacao f\n" +
+                "        JOIN partida p ON f.id_partida = p.id \n" +
+                "        WHERE f.id_jogador = j.id\n" +
+                "          AND f.sucesso = TRUE \n" +
+                "          AND p.id_campeonato = ?\n" +
+                "      ) > 0\n" +
+                "ORDER BY num_gols DESC;";
+
+        List<ArtilheiroDTO> artilheiros = getArtilheiroDTOS(id, query);
+
+        return artilheiros;
+    }
+
+    private List<ArtilheiroDTO> getArtilheiroDTOS(Integer id, String query) {
+        List<ArtilheiroDTO> artilheiros = new ArrayList<>();
+        try (Connection conn = this.dataSource.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setInt(1, id);
+            statement.setInt(2, id);
+            statement.setInt(3, id);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                ArtilheiroDTO artilheiro = new ArtilheiroDTO(
+                        rs.getInt("id"),
+                        rs.getString("nome_jogador"),
+                        rs.getString("posicao"),
+                        rs.getInt("num_partidas"),
+                        rs.getInt("num_gols"),
+                        rs.getString("url_foto_jogador")
+                );
+                artilheiros.add(artilheiro);
+            }
+        }
+        catch (SQLException e) {
+            throw new RuntimeException("Erro ao obter artilheiros para o campeonato com id: " + id, e);
+        }
+        return artilheiros;
     }
 }

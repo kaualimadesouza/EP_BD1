@@ -1,14 +1,13 @@
 package org.example.goalytics.service;
 
-import org.example.goalytics.Records.CampeonatoHistoricoPartidasDTO;
-import org.example.goalytics.Records.EquipeHistoricoPartidasDTO;
+import org.example.goalytics.Records.*;
 import org.example.goalytics.Records.EquipeJogoHistoricoDTO;
-import org.example.goalytics.Records.EquipeJogoHistoricoDTO;
-import org.example.goalytics.Records.PartidaHistoricoPartidasDTO;
 import org.example.goalytics.model.Campeonato;
 import org.example.goalytics.model.Equipe;
+import org.example.goalytics.model.Jogador;
 import org.example.goalytics.model.Partida;
 import org.example.goalytics.repository.CampeonatoRepository;
+import org.example.goalytics.repository.JogadorRepository;
 import org.example.goalytics.repository.PartidaRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +18,12 @@ import java.util.List;
 public class CampeonatoService {
     private final CampeonatoRepository campeonatoRepository;
     private final PartidaRepository partidaRepository;
+    private final JogadorRepository jogadorRepository;
 
-    public CampeonatoService(CampeonatoRepository campeonatoRepository, PartidaRepository partidaRepository) {
+    public CampeonatoService(CampeonatoRepository campeonatoRepository, PartidaRepository partidaRepository, JogadorRepository jogadorRepository) {
         this.campeonatoRepository = campeonatoRepository;
         this.partidaRepository = partidaRepository;
+        this.jogadorRepository = jogadorRepository;
     }
 
     public List<Campeonato> listarCampeonatos() {
@@ -97,6 +98,30 @@ public class CampeonatoService {
         }
 
         return campeonatosComJogosRecentes;
+    }
+
+    public List<ArtilheirosCampeonatoDTO> listarArtilheiroPorCampeonato() {
+        // Inicializar a lista de DTOs a serem retornados
+        List<ArtilheirosCampeonatoDTO> artilheirosPorCampeonato = new ArrayList<ArtilheirosCampeonatoDTO>();
+
+        // 1. Buscar todos os campeonatos
+        List<Campeonato> campeonatos = campeonatoRepository.listarTodos();
+
+        // 2. Para cada campeonato, buscar os artilheiros e montar o DTO
+        for (Campeonato campeonato : campeonatos) {
+            List<ArtilheiroDTO> artilheiroDTOS = jogadorRepository.obterArtilheirosPorCampeonato(campeonato.getId());
+            ArtilheirosCampeonatoDTO artilheirosCampeonatoDTO = new ArtilheirosCampeonatoDTO(
+                campeonato.getNome(),
+                artilheiroDTOS
+            );
+            artilheirosPorCampeonato.add(artilheirosCampeonatoDTO);
+        }
+
+        return artilheirosPorCampeonato;
+    }
+
+    public EstatisticasCampeonatoDTO buscarEstatisticasPorNomeCampeonato() {
+
     }
 }
 
