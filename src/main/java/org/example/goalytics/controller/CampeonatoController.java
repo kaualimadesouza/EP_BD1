@@ -78,6 +78,7 @@ public class CampeonatoController {
             List<CampeonatoJogadoresCarosDTO> estatisticas = campeonatoService.buscarEstatisticasJogadoresMaisCaros();
             return ResponseEntity.ok(estatisticas);
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return ResponseEntity.status(500).build();
         }
     }
@@ -124,9 +125,8 @@ public class CampeonatoController {
         try {
             campeonatoService.atualizarCampeonato(campeonato, id);
             return ResponseEntity.ok().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(500).body("Erro ao atualizar campeonato: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Erro interno do servidor: " + e.getMessage());
         }
     }
 }
-

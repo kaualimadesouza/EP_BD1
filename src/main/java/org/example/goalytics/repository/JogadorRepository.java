@@ -194,7 +194,7 @@ public class JogadorRepository {
                 "          AND f.sucesso = TRUE \n" +
                 "          AND p.id_campeonato = ?\n" +
                 "      ) > 0\n" +
-                "ORDER BY num_gols DESC;";
+                "ORDER BY num_gols DESC LIMIT 10;";
 
         List<ArtilheiroDTO> artilheiros = getArtilheiroDTOS(id, query);
 
@@ -239,7 +239,7 @@ public class JogadorRepository {
                 "JOIN\n" +
                 "    campeonato_equipe ce ON je.id_equipe = ce.id_equipe\n" +
                 "WHERE\n" +
-                "    ce.id_campeonato = 1\n" +
+                "    ce.id_campeonato = ?\n" +
                 "group by j.nome_completo, j.url_foto_jogador\n" +
                 "order by max_preco desc\n" +
                 "limit 10;";
