@@ -2,6 +2,7 @@ package org.example.goalytics.controller;
 
 import org.example.goalytics.Records.ArtilheirosCampeonatoDTO;
 import org.example.goalytics.Records.CampeonatoHistoricoPartidasDTO;
+import org.example.goalytics.Records.CampeonatoJogadoresCarosDTO;
 import org.example.goalytics.Records.EstatisticasCampeonatoDTO;
 import org.example.goalytics.model.Campeonato;
 import org.example.goalytics.service.CampeonatoService;
@@ -60,10 +61,21 @@ public class CampeonatoController {
     }
 
     @CrossOrigin(origins = "*")
-    @GetMapping("/estatisticas/{nomeCampeonato}")
-    public ResponseEntity<EstatisticasCampeonatoDTO> estatisticasPorNomeCampeonato(@PathVariable String nomeCampeonato) {
+    @GetMapping("/estatisticas/{id}")
+    public ResponseEntity<EstatisticasCampeonatoDTO> estatisticasPorNomeCampeonato(@PathVariable Integer id) {
         try {
-            EstatisticasCampeonatoDTO estatisticas = campeonatoService.buscarEstatisticasPorNomeCampeonato();
+            EstatisticasCampeonatoDTO estatisticas = campeonatoService.buscarEstatisticasPorNomeCampeonato(id);
+            return ResponseEntity.ok(estatisticas);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/estatisticas/jogadorescaros")
+    public ResponseEntity<List<CampeonatoJogadoresCarosDTO>> estatisticasJogadoresMaisCaros() {
+        try {
+            List<CampeonatoJogadoresCarosDTO> estatisticas = campeonatoService.buscarEstatisticasJogadoresMaisCaros();
             return ResponseEntity.ok(estatisticas);
         } catch (RuntimeException e) {
             return ResponseEntity.status(500).build();

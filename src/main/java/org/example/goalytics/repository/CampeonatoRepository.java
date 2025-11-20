@@ -1,5 +1,8 @@
 package org.example.goalytics.repository;
 
+import org.example.goalytics.Records.EstadiosNaoEstaNoCampeonatoDTO;
+import org.example.goalytics.Records.EstatisticasCampeonatoDTO;
+import org.example.goalytics.Records.MediaGolsPorPartidaEmCampeonatoDTO;
 import org.example.goalytics.model.Campeonato;
 import org.springframework.stereotype.Repository;
 
@@ -141,6 +144,83 @@ public class CampeonatoRepository {
             throw new RuntimeException("Erro ao listar colunas da tabela campeonato", e);
         }
         return colunas;
+    }
+
+    public List<MediaGolsPorPartidaEmCampeonatoDTO> obterMediaGolsPorPartidaCampeonatos() {
+        String query = "SELECT\n" +
+                "    c.nome AS nome_campeonato,\n" +
+                "    AVG(total_placar_partida) AS media_gols_por_jogo\n" +
+                "FROM\n" +
+                "    campeonato c\n" +
+                "JOIN\n" +
+                "    partida p ON c.id = p.id_campeonato\n" +
+                "JOIN\n" +
+                "    (\n" +
+                "        SELECT\n" +
+                "            id_partida,\n" +
+                "            SUM(placar) AS total_placar_partida\n" +
+                "        FROM\n" +
+                "            partida_equipe_possui\n" +
+                "        GROUP BY\n" +
+                "            id_partida\n" +
+                "    ) AS placares_partida ON p.id = placares_partida.id_partida\n" +
+                "GROUP BY\n" +
+                "    c.nome\n" +
+                "ORDER BY\n" +
+                "    media_gols_por_jogo DESC;";
+
+        List<MediaGolsPorPartidaEmCampeonatoDTO> resultados = new ArrayList<>();
+        try (Connection conn = this.dataSource.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement(query);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                MediaGolsPorPartidaEmCampeonatoDTO dto = new MediaGolsPorPartidaEmCampeonatoDTO(
+                        rs.getString("nome_campeonato"),
+                        rs.getDouble("media_gols_por_jogo")
+                );
+                resultados.add(dto);
+            }
+
+            return resultados;
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao obter média de gols por partida em campeonatos", e);
+        }
+    }
+
+    public List<EstadiosNaoEstaNoCampeonatoDTO> obterEstadiosNaoEstaNoCampeonato(Integer id) {
+        String query = "SELECT \n" +
+                "    e.nome_oficial,\n" +
+                "    e.endereco,\n" +
+                "    e.capacidade_atual \n" +
+                "FROM estadio e\n" +
+                "except\n" +
+                "SELECT  \n" +
+                "    e2.nome_oficial,\n" +
+                "    e2.endereco,\n" +
+                "    e2.capacidade_atual\n" +
+                "FROM estadio e2\n" +
+                "JOIN partida p ON p.id_estadio = e2.id\n" +
+                "JOIN campeonato c ON c.id = p.id_campeonato\n" +
+                "WHERE c.id = ?\n" +
+                "order by capacidade_atual desc;\n";
+        List<EstadiosNaoEstaNoCampeonatoDTO> resultados = new ArrayList<>();
+        try (Connection conn = this.dataSource.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                EstadiosNaoEstaNoCampeonatoDTO dto = new EstadiosNaoEstaNoCampeonatoDTO(
+                        rs.getString("nome_oficial"),
+                        rs.getString("endereco"),
+                        rs.getInt("capacidade_atual")
+                );
+                resultados.add(dto);
+            }
+
+            return resultados;
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao obter estádios que não estão no campeonato");
+        }
     }
 }
 

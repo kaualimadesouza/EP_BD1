@@ -1,6 +1,7 @@
 package org.example.goalytics.repository;
 
 import org.example.goalytics.Records.ArtilheiroDTO;
+import org.example.goalytics.Records.JogadoresMaisCarosPorCompeticao;
 import org.example.goalytics.model.Jogador;
 import org.springframework.stereotype.Repository;
 
@@ -224,5 +225,42 @@ public class JogadorRepository {
             throw new RuntimeException("Erro ao obter artilheiros para o campeonato com id: " + id, e);
         }
         return artilheiros;
+    }
+
+    public List<JogadoresMaisCarosPorCompeticao> obterJogadoresMaisCarosPorCampeonato(Integer id) {
+        String query = "SELECT\n" +
+                "    MAX(j.preco) as max_preco,\n" +
+                "    j.nome_completo,\n" +
+                "    j.url_foto_jogador \n" +
+                "FROM\n" +
+                "    jogador j\n" +
+                "JOIN\n" +
+                "    jogador_equipe je ON j.id = je.id_jogador\n" +
+                "JOIN\n" +
+                "    campeonato_equipe ce ON je.id_equipe = ce.id_equipe\n" +
+                "WHERE\n" +
+                "    ce.id_campeonato = 1\n" +
+                "group by j.nome_completo, j.url_foto_jogador\n" +
+                "order by max_preco desc\n" +
+                "limit 10;";
+
+        List<JogadoresMaisCarosPorCompeticao> jogadoresMaisCaros = new ArrayList<>();
+        try (Connection conn = this.dataSource.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                JogadoresMaisCarosPorCompeticao jogador = new JogadoresMaisCarosPorCompeticao(
+                        rs.getString("nome_completo"),
+                        rs.getDouble("max_preco"),
+                        rs.getString("url_foto_jogador")
+                );
+                jogadoresMaisCaros.add(jogador);
+            }
+            return jogadoresMaisCaros;
+        }
+        catch (SQLException e) {
+            throw new RuntimeException("Erro ao obter jogadores mais caros para o campeonato com id: " + id, e);
+        }
     }
 }

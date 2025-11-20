@@ -135,22 +135,44 @@ public class PartidaRepository {
     }
 
     public List<PartidaDetalhesDTO> obterUltimaPartidaDetalhes() {
-        String sql = "select \n" +
-                "\tp.id,\n" +
+        String sql = "SELECT\n" +
+                "    p.id,\n" +
                 "    p.data,\n" +
                 "    p.horario,\n" +
                 "    p.condicao_climatica,\n" +
                 "    p.status,\n" +
-                "    c.temporada as \"temporada_campeonato\",\n" +
-                "    c.campeao,\n" +
-                "    c.nome as \"nome_campeonato\",\n" +
-                "    e.nome_oficial as \"nome_oficial_estadio\",\n" +
-                "    e.nome_apelido as \"nome_apelido_estadio\",\n" +
-                "    e.pais\n" +
-                "from public.partida p\n" +
-                "inner join public.campeonato c on p.id_campeonato = c.id\n" +
-                "inner join public.estadio e on p.id_estadio = e.id\n" +
-                "limit 10;\n";
+                "    (\n" +
+                "        SELECT c.temporada\n" +
+                "        FROM public.campeonato c\n" +
+                "        WHERE c.id = p.id_campeonato\n" +
+                "    ) AS temporada_campeonato,\n" +
+                "    (\n" +
+                "        SELECT c.campeao\n" +
+                "        FROM public.campeonato c\n" +
+                "        WHERE c.id = p.id_campeonato\n" +
+                "    ) AS campeao,\n" +
+                "    (\n" +
+                "        SELECT c.nome\n" +
+                "        FROM public.campeonato c\n" +
+                "        WHERE c.id = p.id_campeonato\n" +
+                "    ) AS nome_campeonato,\n" +
+                "    (\n" +
+                "        SELECT e.nome_oficial\n" +
+                "        FROM public.estadio e\n" +
+                "        WHERE e.id = p.id_estadio\n" +
+                "    ) AS nome_oficial_estadio,\n" +
+                "    (\n" +
+                "        SELECT e.nome_apelido\n" +
+                "        FROM public.estadio e\n" +
+                "        WHERE e.id = p.id_estadio\n" +
+                "    ) AS nome_apelido_estadio,\n" +
+                "    (\n" +
+                "        SELECT e.pais\n" +
+                "        FROM public.estadio e\n" +
+                "        WHERE e.id = p.id_estadio\n" +
+                "    ) AS pais\n" +
+                "FROM public.partida p\n" +
+                "LIMIT 10;";
         List<PartidaDetalhesDTO> partidasDetalhasdas = new ArrayList<>();
         try (Connection conn = this.dataSource.getConnection()) {
             PreparedStatement statement = conn.prepareStatement(sql);

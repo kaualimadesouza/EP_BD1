@@ -1,5 +1,9 @@
 package org.example.goalytics.Records;
 
-public record EstatisticasCampeonatoDTO() {
+import java.util.List;
 
+public record EstatisticasCampeonatoDTO(
+    List<MediaGolsPorPartidaEmCampeonatoDTO> mediaGolsPorPartidaDTO,
+    List<EstadiosNaoEstaNoCampeonatoDTO> estadiosNaoEstaNoCampeonatoDTO
+) {
 }
